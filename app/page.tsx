@@ -1,5 +1,5 @@
 "use client";
-
+import Link from 'next/link';
 import { useState, useEffect } from "react";
 
 // ─── Utility: neon glow class helper ───────────────────────────────────────
@@ -301,10 +301,12 @@ export default function KarimStorePage() {
                   style={{ boxShadow: "0 0 24px rgba(16,185,129,0.4)" }}
                 >
                   Shop Now
-                </button>
-                <button className="px-6 py-3 rounded-full text-sm font-semibold border border-white/15 text-zinc-300 hover:border-emerald-500/50 hover:text-white transition-all duration-300">
-                  Our Story →
-                </button>
+               <Link 
+  href="/about" 
+  className="hover:text-cyan-400 transition-colors cursor-pointer"
+>
+  Our Story
+</Link>
               </div>
             </div>
 
