@@ -507,13 +507,5 @@ export default function KarimStorePage() {
     </main>
   );
 }
-import Link from 'next/link';
 
-// Inside your Navbar:
-<Link href="/about" className="hover:text-cyan-400 transition-colors">
-  About
-</Link>
-<Link href="/contact" className="hover:text-cyan-400 transition-colors">
-  Contact
-</Link>
 
