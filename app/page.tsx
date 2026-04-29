@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 // ─── Structured Data for AI/SEO bots ────────────────────────────────────────
 const STRUCTURED_DATA = {
   "@context": "https://schema.org",
@@ -404,6 +404,7 @@ export default function KarimStorePage() {
         style={{ background: "#06030f" }}
       >
         <AmbientOrbs />
+        <ImageSlider />
         <CyberGrid />
 
         {/* Subtle noise grain overlay */}
@@ -786,5 +787,37 @@ export default function KarimStorePage() {
         `}</style>
       </main>
     </>
+  );
+}
+function ImageSlider() {
+  const [current, setCurrent] = useState(0);
+  const images = ['/image1.webp', '/image2.webp', '/image3.webp'];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div className="relative w-full h-[400px] md:h-[600px] overflow-hidden rounded-3xl border border-white/10 shadow-2xl mb-12">
+      {images.map((img, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === current ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Image src={img} alt="Specialist Product" fill className="object-cover" priority={index === 0} />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        </div>
+      ))}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        {images.map((_, i) => (
+          <div key={i} className={`h-2 rounded-full transition-all ${i === current ? 'bg-cyan-400 w-8' : 'bg-white/30 w-2'}`} />
+        ))}
+      </div>
+    </div>
   );
 }
