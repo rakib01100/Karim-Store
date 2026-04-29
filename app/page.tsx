@@ -788,6 +788,60 @@ export default function KarimStorePage() {
     </>
   );
 }
+"use client";
+import React, { useState, useEffect } from 'react';
+import Image from 'next/image';
 
+const images = [
+  '/image1.webp',
+  '/image2.webp',
+  '/image3.webp',
+];
+
+export default function ImageSlider() {
+  const [current, setCurrent] = useState(0);
+
+  // This is the "Smart" part: it changes the image automatically
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+    }, 5000); // 5000ms = 5 seconds
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="relative w-full h-[500px] overflow-hidden rounded-3xl border border-white/10 shadow-2xl">
+      {images.map((img, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === current ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Image 
+            src={img} 
+            alt={`Specialist Product ${index + 1}`} 
+            fill 
+            className="object-cover"
+          />
+          {/* Vibrant Overlay to make text readable */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+        </div>
+      ))}
+      
+      {/* Navigation Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+        {images.map((_, i) => (
+          <div 
+            key={i} 
+            className={`h-2 w-2 rounded-full transition-all ${
+              i === current ? 'bg-cyan-400 w-6' : 'bg-white/30'
+            }`} 
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
 
