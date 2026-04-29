@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
 // --- Structured Data for AI/SEO bots ---------------------------------------
 const STRUCTURE_DATA = {
   "@context": "https://schema.org",
