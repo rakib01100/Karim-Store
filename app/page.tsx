@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-// ─── Structured Data for AI/SEO bots ────────────────────────────────────────
-const STRUCTURED_DATA = {
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import Link from "next/link";
+
+// --- Structured Data for AI/SEO bots ---------------------------------------
+const STRUCTURE_DATA = {
   "@context": "https://schema.org",
   "@type": "Store",
-  name: "Karim Store",
-  description:
-    "Premium smart retail store in Chittagong offering specialist-grade products with digital-first service.",
+  "name": "Karim Store",
+  "description": "Premium smart retail store in Chittagong offering specialist-grade products with digital-first service."
   url: "https://karimstore.com",
   address: {
     "@type": "PostalAddress",
