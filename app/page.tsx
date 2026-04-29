@@ -1,513 +1,793 @@
 "use client";
-import Link from 'next/link';
-import { useState, useEffect } from "react";
 
-// ─── Utility: neon glow class helper ───────────────────────────────────────
-const glow = (color: "emerald" | "cyan" | "both") => {
-  if (color === "emerald")
-    return "hover:shadow-[0_0_24px_4px_rgba(16,185,129,0.35)] transition-shadow duration-500";
-  if (color === "cyan")
-    return "hover:shadow-[0_0_24px_4px_rgba(6,182,212,0.35)] transition-shadow duration-500";
-  return "hover:shadow-[0_0_32px_6px_rgba(6,182,212,0.25),0_0_32px_6px_rgba(16,185,129,0.20)] transition-shadow duration-500";
+import { useState, useEffect, useRef } from "react";
+
+// ─── Structured Data for AI/SEO bots ────────────────────────────────────────
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@type": "Store",
+  name: "Karim Store",
+  description:
+    "Premium smart retail store in Chittagong offering specialist-grade products with digital-first service.",
+  url: "https://karimstore.com",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Chittagong",
+    addressCountry: "BD",
+  },
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Specialist Products",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Premium Grade Rice" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Cold-Press Mustard Oil" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Artisan Spice Blends" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Organic Lentils" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fresh Seafood Selection" } },
+      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Smart Pantry Bundles" } },
+    ],
+  },
 };
 
-// ─── Data ───────────────────────────────────────────────────────────────────
-const categories = [
+// ─── Data ────────────────────────────────────────────────────────────────────
+const specialists = [
   {
-    id: "new-arrivals",
-    label: "New Arrivals",
-    icon: "✦",
-    accent: "emerald",
-    tag: "Just In",
-    description:
-      "Freshly sourced goods — from daily essentials to premium finds. Updated every week.",
-    items: ["Premium Rice", "Organic Spices", "Cold-Press Oils"],
-    span: "col-span-2 row-span-2",
-  },
-  {
-    id: "family-heritage",
-    label: "Family Heritage",
-    icon: "◈",
-    accent: "cyan",
-    tag: "Since 1998",
-    description:
-      "Trusted recipes and products that have been part of Chittagong households for generations.",
-    items: ["Hilsa Selection", "Deshi Mustard", "Handpicked Lentils"],
-    span: "col-span-1 row-span-1",
-  },
-  {
-    id: "weekly-deals",
-    label: "Weekly Deals",
+    id: "rice",
+    name: "Premium Grade Rice",
+    category: "Grains & Staples",
+    badge: "Top Pick",
+    price: "৳ 180 / kg",
     icon: "⬡",
-    accent: "both",
-    tag: "Limited Time",
-    description:
-      "Hand-picked savings refreshed every Sunday morning. Don't miss out.",
-    items: ["Bundle Packs", "Seasonal Produce", "Flash Sales"],
-    span: "col-span-1 row-span-1",
+    gradient: "from-fuchsia-600 via-pink-500 to-rose-400",
+    glow: "rgba(217,70,239,0.5)",
+    tags: ["Aged", "Aromatic", "Specialist"],
+  },
+  {
+    id: "oil",
+    name: "Cold-Press Mustard Oil",
+    category: "Oils & Condiments",
+    badge: "Artisan",
+    price: "৳ 320 / L",
+    icon: "◎",
+    gradient: "from-cyan-500 via-sky-400 to-blue-500",
+    glow: "rgba(6,182,212,0.5)",
+    tags: ["Cold-Pressed", "Pure", "Lab-Verified"],
+  },
+  {
+    id: "spice",
+    name: "Artisan Spice Blends",
+    category: "Spices & Herbs",
+    badge: "Exclusive",
+    price: "৳ 95 / pack",
+    icon: "✦",
+    gradient: "from-violet-600 via-purple-500 to-fuchsia-500",
+    glow: "rgba(139,92,246,0.5)",
+    tags: ["Hand-ground", "Small Batch", "No Additives"],
+  },
+  {
+    id: "lentils",
+    name: "Organic Lentils",
+    category: "Pulses & Legumes",
+    badge: "Certified",
+    price: "৳ 140 / kg",
+    icon: "◈",
+    gradient: "from-pink-600 via-fuchsia-500 to-violet-500",
+    glow: "rgba(236,72,153,0.5)",
+    tags: ["Organic", "Stone-sorted", "High Protein"],
+  },
+  {
+    id: "seafood",
+    name: "Fresh Seafood Selection",
+    category: "Marine & Fish",
+    badge: "Daily Fresh",
+    price: "Market Price",
+    icon: "◉",
+    gradient: "from-cyan-400 via-teal-400 to-emerald-400",
+    glow: "rgba(20,184,166,0.5)",
+    tags: ["Daily Sourced", "Chilled", "Traceable"],
+  },
+  {
+    id: "bundles",
+    name: "Smart Pantry Bundles",
+    category: "Curated Sets",
+    badge: "Best Value",
+    price: "From ৳ 999",
+    icon: "⬟",
+    gradient: "from-fuchsia-500 via-pink-400 to-cyan-400",
+    glow: "rgba(217,70,239,0.4)",
+    tags: ["AI-Curated", "Monthly", "Save 20%"],
   },
 ];
 
-const aiEngines = [
-  { name: "Gemini", icon: "◉", desc: "Structured data & semantic markup" },
-  { name: "Perplexity", icon: "◈", desc: "Citation-ready product metadata" },
-  { name: "ChatGPT", icon: "◎", desc: "Natural language descriptions" },
-  { name: "Claude", icon: "✦", desc: "Context-aware indexing" },
+const services = [
+  {
+    icon: "⚡",
+    title: "60-Min Delivery",
+    body: "Order via WhatsApp or app. Our riders fulfill local orders within the hour.",
+    accent: "fuchsia",
+  },
+  {
+    icon: "🧠",
+    title: "AI Product Search",
+    body: "Ask any AI engine about premium groceries in Chittagong — Karim Store is indexed.",
+    accent: "cyan",
+  },
+  {
+    icon: "📦",
+    title: "Smart Subscriptions",
+    body: "Set up recurring pantry orders. Prices locked. Delivered without lifting a finger.",
+    accent: "pink",
+  },
+  {
+    icon: "✅",
+    title: "Quality Guarantee",
+    body: "Every specialist product is verified. Unsatisfied? Full replacement, no questions.",
+    accent: "violet",
+  },
 ];
 
-// ─── Sub-components ─────────────────────────────────────────────────────────
+// ─── Hooks ───────────────────────────────────────────────────────────────────
 
-function NeonOrb({
-  color,
-  className,
-}: {
-  color: string;
-  className: string;
-}) {
-  return (
-    <div
-      className={`absolute rounded-full blur-[120px] opacity-20 pointer-events-none ${className}`}
-      style={{ background: color }}
-    />
-  );
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) { setVisible(true); obs.disconnect(); }
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return { ref, visible };
 }
 
-function GridLines() {
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function CyberGrid() {
   return (
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
         backgroundImage: `
-          linear-gradient(rgba(16,185,129,0.04) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(16,185,129,0.04) 1px, transparent 1px)
+          linear-gradient(rgba(217,70,239,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6,182,212,0.05) 1px, transparent 1px)
         `,
-        backgroundSize: "48px 48px",
+        backgroundSize: "56px 56px",
       }}
     />
   );
 }
 
-function Badge({ text, accent }: { text: string; accent: string }) {
-  const colors =
-    accent === "emerald"
-      ? "border-emerald-500/40 text-emerald-400 bg-emerald-500/10"
-      : accent === "cyan"
-      ? "border-cyan-500/40 text-cyan-400 bg-cyan-500/10"
-      : "border-cyan-400/30 text-cyan-300 bg-cyan-500/10";
+function AmbientOrbs() {
+  return (
+    <>
+      <div
+        className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full blur-[140px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(217,70,239,0.25) 0%, transparent 70%)" }}
+      />
+      <div
+        className="absolute top-1/4 -right-24 w-[420px] h-[420px] rounded-full blur-[120px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(6,182,212,0.22) 0%, transparent 70%)" }}
+      />
+      <div
+        className="absolute bottom-0 left-1/3 w-[380px] h-[380px] rounded-full blur-[130px] pointer-events-none"
+        style={{ background: "radial-gradient(circle, rgba(236,72,153,0.20) 0%, transparent 70%)" }}
+      />
+    </>
+  );
+}
+
+function GlassBadge({
+  text,
+  color,
+}: {
+  text: string;
+  color: "fuchsia" | "cyan" | "pink" | "violet";
+}) {
+  const styles = {
+    fuchsia: "border-fuchsia-400/40 text-fuchsia-300 bg-fuchsia-500/10",
+    cyan: "border-cyan-400/40 text-cyan-300 bg-cyan-500/10",
+    pink: "border-pink-400/40 text-pink-300 bg-pink-500/10",
+    violet: "border-violet-400/40 text-violet-300 bg-violet-500/10",
+  };
   return (
     <span
-      className={`text-[10px] uppercase tracking-[0.2em] font-semibold px-2.5 py-1 rounded-full border ${colors}`}
+      className={`text-[10px] uppercase tracking-[0.2em] font-bold px-3 py-1 rounded-full border backdrop-blur-sm ${styles[color]}`}
     >
       {text}
     </span>
   );
 }
 
-function BentoCard({
-  cat,
+function SpecialistCard({
+  product,
+  index,
 }: {
-  cat: (typeof categories)[0];
+  product: (typeof specialists)[0];
+  index: number;
 }) {
-  const borderColor =
-    cat.accent === "emerald"
-      ? "border-emerald-500/20 hover:border-emerald-400/50"
-      : cat.accent === "cyan"
-      ? "border-cyan-500/20 hover:border-cyan-400/50"
-      : "border-cyan-500/20 hover:border-cyan-300/40";
-
-  const iconColor =
-    cat.accent === "emerald"
-      ? "text-emerald-400"
-      : cat.accent === "cyan"
-      ? "text-cyan-400"
-      : "text-cyan-300";
-
-  const dotColor =
-    cat.accent === "emerald"
-      ? "bg-emerald-400"
-      : cat.accent === "cyan"
-      ? "bg-cyan-400"
-      : "bg-cyan-300";
+  const [hovered, setHovered] = useState(false);
+  const { ref, visible } = useScrollReveal();
 
   return (
     <div
-      className={`
-        relative group rounded-2xl border bg-white/[0.03] backdrop-blur-sm
-        p-6 flex flex-col justify-between overflow-hidden cursor-pointer
-        transition-all duration-500 ${borderColor} ${glow(cat.accent as "emerald" | "cyan" | "both")}
-        ${cat.span}
-      `}
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative group rounded-2xl overflow-hidden cursor-pointer"
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(32px)",
+        transition: `opacity 0.6s ease ${index * 80}ms, transform 0.6s ease ${index * 80}ms`,
+      }}
     >
-      {/* Corner glow on hover */}
       <div
-        className={`
-          absolute -top-10 -right-10 w-40 h-40 rounded-full blur-3xl opacity-0
-          group-hover:opacity-30 transition-opacity duration-700
-          ${cat.accent === "emerald" ? "bg-emerald-500" : "bg-cyan-500"}
-        `}
-      />
-
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <span className={`text-3xl font-light ${iconColor}`}>{cat.icon}</span>
-        <Badge text={cat.tag} accent={cat.accent} />
-      </div>
-
-      {/* Title & Description */}
-      <div className="flex-1">
-        <h3 className="text-xl font-semibold text-white mb-2 tracking-tight">
-          {cat.label}
-        </h3>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-5">
-          {cat.description}
-        </p>
-      </div>
-
-      {/* Items list */}
-      <ul className="space-y-2">
-        {cat.items.map((item) => (
-          <li key={item} className="flex items-center gap-2.5 text-sm text-zinc-300">
-            <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dotColor}`} />
-            {item}
-          </li>
-        ))}
-      </ul>
-
-      {/* CTA */}
-      <button
-        className={`
-          mt-5 self-start text-xs uppercase tracking-[0.15em] font-semibold
-          flex items-center gap-2 transition-all duration-300
-          ${
-            cat.accent === "emerald"
-              ? "text-emerald-400 hover:text-emerald-300"
-              : "text-cyan-400 hover:text-cyan-300"
-          }
-        `}
+        className="relative h-full p-6 flex flex-col justify-between border rounded-2xl"
+        style={{
+          background: hovered ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.04)",
+          borderColor: hovered
+            ? product.glow.replace("0.5", "0.6")
+            : "rgba(255,255,255,0.10)",
+          backdropFilter: "blur(16px)",
+          boxShadow: hovered
+            ? `0 0 40px ${product.glow}, inset 0 1px 0 rgba(255,255,255,0.12)`
+            : "inset 0 1px 0 rgba(255,255,255,0.06)",
+          transition: "all 0.4s ease",
+          minHeight: "240px",
+        }}
       >
-        Explore
-        <svg className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-        </svg>
-      </button>
+        {/* Corner glow */}
+        <div
+          className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl pointer-events-none"
+          style={{
+            background: product.glow,
+            opacity: hovered ? 0.35 : 0,
+            transition: "opacity 0.5s ease",
+          }}
+        />
+
+        {/* Top: icon + badge */}
+        <div className="flex items-start justify-between mb-4">
+          <span
+            className={`text-4xl bg-gradient-to-br ${product.gradient} bg-clip-text text-transparent font-black leading-none`}
+            style={{
+              filter: hovered ? `drop-shadow(0 0 12px ${product.glow})` : "none",
+              transition: "filter 0.4s",
+            }}
+          >
+            {product.icon}
+          </span>
+          <span
+            className="text-[10px] uppercase tracking-[0.18em] font-bold px-2.5 py-1 rounded-full border"
+            style={{
+              background: product.glow.replace("0.5", "0.12"),
+              borderColor: product.glow.replace("0.5", "0.4"),
+              color: "rgba(255,255,255,0.85)",
+            }}
+          >
+            {product.badge}
+          </span>
+        </div>
+
+        {/* Title & category */}
+        <div className="flex-1">
+          <p className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">
+            {product.category}
+          </p>
+          <h3
+            className={`text-lg font-black leading-tight bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent mb-3`}
+          >
+            {product.name}
+          </h3>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {product.tags.map((tag) => (
+            <span
+              key={tag}
+              className="text-[10px] px-2 py-0.5 rounded-full border border-white/10 text-white/50 bg-white/5"
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+
+        {/* Price + CTA */}
+        <div className="flex items-center justify-between">
+          <span className="text-white font-bold text-base">{product.price}</span>
+          <button
+            className={`text-xs font-bold px-4 py-1.5 rounded-full bg-gradient-to-r ${product.gradient} text-white`}
+            style={{
+              boxShadow: hovered ? `0 0 20px ${product.glow}` : "none",
+              transition: "box-shadow 0.4s",
+            }}
+          >
+            Add →
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-// ─── Main Page ───────────────────────────────────────────────────────────────
-export default function KarimStorePage() {
-  const [searchVal, setSearchVal] = useState("");
-  const [tick, setTick] = useState(0);
+function ServiceCard({
+  svc,
+  index,
+}: {
+  svc: (typeof services)[0];
+  index: number;
+}) {
+  const { ref, visible } = useScrollReveal();
+  const accentMap: Record<string, string> = {
+    fuchsia: "from-fuchsia-600 to-pink-500",
+    cyan: "from-cyan-500 to-teal-400",
+    pink: "from-pink-600 to-fuchsia-500",
+    violet: "from-violet-600 to-purple-500",
+  };
+  const glowMap: Record<string, string> = {
+    fuchsia: "rgba(217,70,239,0.3)",
+    cyan: "rgba(6,182,212,0.3)",
+    pink: "rgba(236,72,153,0.3)",
+    violet: "rgba(139,92,246,0.3)",
+  };
 
-  // Subtle ticker for the animated status dot
+  return (
+    <div
+      ref={ref}
+      className="group relative rounded-2xl p-6 border border-white/10 cursor-default overflow-hidden"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        backdropFilter: "blur(12px)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transition: `opacity 0.5s ease ${index * 100}ms, transform 0.5s ease ${index * 100}ms`,
+      }}
+    >
+      {/* Hover bg */}
+      <div
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+        style={{
+          background: `radial-gradient(circle at 30% 30%, ${glowMap[svc.accent]}, transparent 70%)`,
+        }}
+      />
+      <div className="relative z-10">
+        <span className="text-3xl mb-4 block">{svc.icon}</span>
+        <h3
+          className={`text-lg font-black mb-2 bg-gradient-to-r ${accentMap[svc.accent]} bg-clip-text text-transparent`}
+        >
+          {svc.title}
+        </h3>
+        <p className="text-sm text-white/50 leading-relaxed">{svc.body}</p>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Page ────────────────────────────────────────────────────────────────
+export default function KarimStorePage() {
+  const [ticker, setTicker] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const tickerPhrases = [
+    "Premium Selection — Smart Shopping",
+    "Fresh. Fast. Digital-First.",
+    "Indexed for AI Search Engines",
+    "60-Min Delivery in Chittagong",
+  ];
+
   useEffect(() => {
-    const id = setInterval(() => setTick((t) => t + 1), 1200);
+    const id = setInterval(
+      () => setTicker((t) => (t + 1) % tickerPhrases.length),
+      3000
+    );
     return () => clearInterval(id);
   }, []);
 
   return (
-    <main
-      className="relative min-h-screen overflow-x-hidden text-white"
-      style={{ background: "#080c0e" }}
-    >
-      {/* ── Global ambient orbs ── */}
-      <NeonOrb color="#10b981" className="w-[600px] h-[600px] -top-40 -left-40" />
-      <NeonOrb color="#06b6d4" className="w-[500px] h-[500px] top-1/3 -right-32" />
-      <NeonOrb color="#10b981" className="w-[400px] h-[400px] bottom-0 left-1/2 -translate-x-1/2" />
+    <>
+      {/* Structured Data for AI crawlers */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
+      {/* llms.txt reference: https://karimstore.com/llms.txt */}
+      {/* This store is optimized for LLM indexing. See /llms.txt for full product catalog metadata. */}
 
-      {/* ── Subtle grid overlay ── */}
-      <GridLines />
+      <main
+        className="relative min-h-screen overflow-x-hidden text-white"
+        style={{ background: "#06030f" }}
+      >
+        <AmbientOrbs />
+        <CyberGrid />
 
-      <div className="relative z-10 max-w-6xl mx-auto px-6 py-12 space-y-20">
+        {/* Subtle noise grain overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.025]"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E")`,
+          }}
+        />
 
-        {/* ══════════════════════ NAV ══════════════════════ */}
-        <nav className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-black text-sm">
-              K
-            </div>
-            <span className="font-semibold tracking-wide text-white">
-              Karim<span className="text-emerald-400">Store</span>
-            </span>
-          </div>
+        <div className="relative z-10">
 
-          <div className="hidden md:flex items-center gap-8 text-sm text-zinc-400">
-            {["Shop", "Heritage", "Deals", "Contact"].map((link) => (
-              <a
-                key={link}
-                href="#"
-                className="hover:text-emerald-400 transition-colors duration-200"
-              >
-                {link}
-              </a>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-2 text-xs text-emerald-400 border border-emerald-500/30 rounded-full px-3 py-1.5 bg-emerald-500/5">
-            <span
-              className={`w-1.5 h-1.5 rounded-full bg-emerald-400 ${
-                tick % 2 === 0 ? "opacity-100" : "opacity-40"
-              } transition-opacity duration-700`}
-            />
-            Open Now
-          </div>
-        </nav>
-
-        {/* ══════════════════════ HERO ══════════════════════ */}
-        <section className="relative">
-          {/* Glassmorphism hero card */}
+          {/* ── Marquee bar ── */}
           <div
-            className="relative rounded-3xl border border-white/10 overflow-hidden p-10 md:p-16"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(16,185,129,0.06) 50%, rgba(6,182,212,0.04) 100%)",
-              backdropFilter: "blur(20px)",
-              boxShadow:
-                "0 0 80px rgba(16,185,129,0.08), inset 0 1px 0 rgba(255,255,255,0.06)",
-            }}
+            className="w-full py-2.5 overflow-hidden border-b border-white/8"
+            style={{ background: "rgba(217,70,239,0.08)" }}
           >
-            {/* Decorative top bar */}
-            <div className="absolute top-0 left-16 right-16 h-px bg-gradient-to-r from-transparent via-emerald-400/60 to-transparent" />
+            <p className="text-center text-xs uppercase tracking-[0.25em] font-bold text-fuchsia-300/80 transition-all duration-700">
+              {tickerPhrases[ticker]}
+            </p>
+          </div>
 
-            <div className="max-w-2xl space-y-6">
+          <div className="max-w-6xl mx-auto px-5 md:px-8">
+
+            {/* ════════════════ NAV ════════════════ */}
+            <nav className="flex items-center justify-between py-6">
               <div className="flex items-center gap-3">
-                <Badge text="Smart Retail 2026" accent="emerald" />
-                <Badge text="Chittagong, BD" accent="cyan" />
-              </div>
-
-              <h1 className="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight">
-                Your Family's{" "}
-                <span
-                  className="text-transparent bg-clip-text"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, #10b981 0%, #06b6d4 60%, #10b981 100%)",
-                    backgroundSize: "200% auto",
-                    animation: "shimmer 4s linear infinite",
-                  }}
-                >
-                  Smart Store
-                </span>
-              </h1>
-
-              <p className="text-lg text-zinc-400 leading-relaxed max-w-lg">
-                Fresh produce, trusted brands, and heritage products — all
-                discoverable by AI engines and always close to home.
-              </p>
-
-              <div className="flex flex-wrap gap-4 pt-2">
-                <button
-                  className="px-6 py-3 rounded-full text-sm font-semibold bg-gradient-to-r from-emerald-500 to-cyan-500 text-black hover:scale-105 transition-transform duration-300"
-                  style={{ boxShadow: "0 0 24px rgba(16,185,129,0.4)" }}
-                >
-                  Shop Now
-               <Link 
-  href="/about" 
-  className="hover:text-cyan-400 transition-colors cursor-pointer"
->
-  Our Story
-</Link>
-              </div>
-            </div>
-
-            {/* Floating stat pills */}
-            <div className="absolute bottom-8 right-8 hidden md:flex flex-col gap-3">
-              {[
-                { label: "Products", val: "500+" },
-                { label: "Happy Families", val: "2,000+" },
-                { label: "Years Trusted", val: "26" },
-              ].map((s) => (
                 <div
-                  key={s.label}
-                  className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2 backdrop-blur-sm"
+                  className="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm text-white"
+                  style={{ background: "linear-gradient(135deg, #d946ef, #06b6d4)" }}
                 >
-                  <span className="text-xl font-black text-emerald-400">
-                    {s.val}
-                  </span>
-                  <span className="text-xs text-zinc-500">{s.label}</span>
+                  K
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Shimmer keyframes */}
-          <style>{`
-            @keyframes shimmer {
-              0% { background-position: 0% center; }
-              100% { background-position: 200% center; }
-            }
-            @keyframes pulse-glow {
-              0%, 100% { opacity: 0.6; }
-              50% { opacity: 1; }
-            }
-          `}</style>
-        </section>
-
-        {/* ══════════════════════ BENTO GRID ══════════════════════ */}
-        <section className="space-y-6">
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-emerald-400 mb-2">
-                ◈ Collections
-              </p>
-              <h2 className="text-3xl font-bold tracking-tight">
-                Browse the Store
-              </h2>
-            </div>
-            <a
-              href="#"
-              className="text-sm text-zinc-500 hover:text-cyan-400 transition-colors hidden md:block"
-            >
-              View all categories →
-            </a>
-          </div>
-
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-auto gap-4">
-            {categories.map((cat) => (
-              <BentoCard key={cat.id} cat={cat} />
-            ))}
-          </div>
-        </section>
-
-        {/* ══════════════════════ SEARCH / AI SECTION ══════════════════════ */}
-        <section className="space-y-6">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-cyan-400 mb-2">
-              ◉ AI Search Optimization
-            </p>
-            <h2 className="text-3xl font-bold tracking-tight">
-              Find Us Anywhere
-            </h2>
-            <p className="text-zinc-500 mt-2 max-w-xl text-sm leading-relaxed">
-              Karim Store is fully optimized for next-generation AI search
-              engines. Ask Gemini, Perplexity, or ChatGPT — we show up.
-            </p>
-          </div>
-
-          {/* Search bar */}
-          <div className="relative max-w-xl">
-            <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-              <svg className="w-4 h-4 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              value={searchVal}
-              onChange={(e) => setSearchVal(e.target.value)}
-              placeholder='Try "fresh hilsa near me" or "best rice Chittagong"…'
-              className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/5 border border-white/10 text-sm text-zinc-200 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/60 focus:bg-white/[0.07] transition-all duration-300"
-              style={{
-                boxShadow: searchVal
-                  ? "0 0 20px rgba(16,185,129,0.15)"
-                  : "none",
-              }}
-            />
-            {searchVal && (
-              <div className="absolute right-3 inset-y-0 flex items-center">
-                <span className="text-[10px] text-emerald-400 border border-emerald-500/30 rounded px-2 py-0.5 bg-emerald-500/10">
-                  AI-Ready
+                <span className="font-black text-white tracking-tight">
+                  KARIM
+                  <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
+                    {" "}STORE
+                  </span>
                 </span>
               </div>
-            )}
-          </div>
 
-          {/* AI Engine cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {aiEngines.map((engine) => (
-              <div
-                key={engine.name}
-                className={`
-                  group relative rounded-xl border border-white/8 bg-white/[0.025]
-                  p-4 backdrop-blur-sm cursor-default
-                  hover:border-cyan-500/30 hover:bg-cyan-500/[0.04]
-                  ${glow("cyan")}
-                  transition-all duration-500
-                `}
-              >
-                <div className="text-xl text-cyan-400 mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {engine.icon}
-                </div>
-                <p className="text-sm font-semibold text-white mb-1">
-                  {engine.name}
-                </p>
-                <p className="text-xs text-zinc-500 leading-relaxed">
-                  {engine.desc}
-                </p>
+              <div className="hidden md:flex gap-8 text-sm font-medium text-white/50">
+                {["Specialists", "Services", "Deals", "Contact"].map((l) => (
+                  <a key={l} href="#" className="hover:text-white transition-colors duration-200">
+                    {l}
+                  </a>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* How it works strip */}
-          <div
-            className="rounded-2xl border border-emerald-500/15 bg-emerald-500/[0.03] p-6 md:p-8"
-            style={{ boxShadow: "0 0 40px rgba(16,185,129,0.05)" }}
-          >
-            <div className="grid md:grid-cols-3 gap-6 md:gap-10">
-              {[
-                {
-                  step: "01",
-                  title: "Structured Metadata",
-                  body: "Every product has schema.org markup so AI crawlers understand exactly what we sell.",
-                },
-                {
-                  step: "02",
-                  title: "Natural Language Descriptions",
-                  body: "Product copy is written to answer questions humans actually ask AI engines.",
-                },
-                {
-                  step: "03",
-                  title: "Real-Time Inventory Signals",
-                  body: "Stock status and pricing are updated so AI answers reflect what's actually available.",
-                },
-              ].map((item) => (
-                <div key={item.step} className="flex gap-4">
-                  <span className="text-3xl font-black text-emerald-500/30 leading-none mt-0.5 flex-shrink-0">
-                    {item.step}
+              <button
+                className="text-sm font-bold px-5 py-2 rounded-full text-white"
+                style={{
+                  background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)",
+                  boxShadow: "0 0 20px rgba(217,70,239,0.4)",
+                }}
+              >
+                Shop Now
+              </button>
+            </nav>
+
+            {/* ════════════════ HERO ════════════════ */}
+            <section className="pt-8 pb-20 relative">
+              {/* Decorative top line */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-1 rounded-full blur-lg"
+                style={{ background: "linear-gradient(90deg, #d946ef, #06b6d4)" }}
+              />
+
+              <div className="text-center space-y-6 max-w-4xl mx-auto">
+                <div className="flex justify-center gap-3 flex-wrap">
+                  <GlassBadge text="Smart Shopping" color="fuchsia" />
+                  <GlassBadge text="Premium Selection" color="cyan" />
+                  <GlassBadge text="Digital-First" color="pink" />
+                </div>
+
+                {/* Massive shifting gradient heading */}
+                <h1 className="text-5xl sm:text-7xl md:text-8xl font-black leading-[0.95] tracking-tighter">
+                  <span
+                    className="block bg-clip-text text-transparent"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, #d946ef 0%, #ec4899 30%, #06b6d4 65%, #d946ef 100%)",
+                      backgroundSize: "200% auto",
+                      animation: "hueShift 5s linear infinite",
+                    }}
+                  >
+                    Premium
                   </span>
-                  <div>
-                    <p className="text-sm font-semibold text-white mb-1.5">
-                      {item.title}
-                    </p>
-                    <p className="text-xs text-zinc-500 leading-relaxed">
-                      {item.body}
-                    </p>
+                  <span className="block text-white">Reimagined.</span>
+                </h1>
+
+                <p className="text-base md:text-lg text-white/50 max-w-xl mx-auto leading-relaxed">
+                  Specialist-grade products, curated for the modern household.
+                  Smart search. Fast delivery. No compromises.
+                </p>
+
+                {/* Live search bar */}
+                <div className="relative max-w-lg mx-auto mt-8">
+                  <div
+                    className="absolute inset-0 rounded-2xl blur-md opacity-60"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, rgba(217,70,239,0.4), rgba(6,182,212,0.4))",
+                    }}
+                  />
+                  <div className="relative flex items-center bg-white/8 border border-white/15 rounded-2xl overflow-hidden backdrop-blur-xl">
+                    <svg
+                      className="w-4 h-4 text-white/40 ml-4 flex-shrink-0"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder='Search "premium mustard oil", "organic lentils"…'
+                      className="flex-1 px-3 py-4 bg-transparent text-sm text-white placeholder-white/30 focus:outline-none"
+                    />
+                    <button
+                      className="mr-2 px-4 py-2 rounded-xl text-xs font-bold text-white flex-shrink-0"
+                      style={{
+                        background: "linear-gradient(135deg, #d946ef, #06b6d4)",
+                      }}
+                    >
+                      Search
+                    </button>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
-        {/* ══════════════════════ FOOTER ══════════════════════ */}
-        <footer className="border-t border-white/8 pt-10 pb-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-600">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 rounded bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-black font-black text-[10px]">
-              K
+                {/* Stats row */}
+                <div className="flex justify-center gap-6 md:gap-12 pt-4 flex-wrap">
+                  {[
+                    { val: "500+", label: "Products" },
+                    { val: "60 min", label: "Delivery" },
+                    { val: "4.9★", label: "Rating" },
+                    { val: "AI-Ready", label: "Indexed" },
+                  ].map((s) => (
+                    <div key={s.label} className="text-center">
+                      <p className="text-2xl font-black bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
+                        {s.val}
+                      </p>
+                      <p className="text-xs text-white/40 uppercase tracking-widest mt-0.5">
+                        {s.label}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            {/* ════════════════ SPECIALIST SHOWCASE ════════════════ */}
+            <section className="pb-20 space-y-8">
+              <div className="flex items-end justify-between">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.22em] text-fuchsia-400 mb-2 font-bold">
+                    ✦ Our Specialists
+                  </p>
+                  <h2 className="text-3xl md:text-4xl font-black text-white">
+                    Curated.{" "}
+                    <span className="bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text text-transparent">
+                      Verified.
+                    </span>
+                  </h2>
+                </div>
+                <a
+                  href="#"
+                  className="hidden md:block text-sm text-white/30 hover:text-fuchsia-400 transition-colors"
+                >
+                  View all →
+                </a>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {specialists.map((p, i) => (
+                  <SpecialistCard key={p.id} product={p} index={i} />
+                ))}
+              </div>
+            </section>
+
+            {/* ════════════════ SMART SERVICES ════════════════ */}
+            <section className="pb-20 space-y-8">
+              {/* Banner */}
+              <div
+                className="relative rounded-3xl overflow-hidden p-8 md:p-12 border border-white/10"
+                style={{
+                  background:
+                    "linear-gradient(135deg, rgba(217,70,239,0.12), rgba(6,182,212,0.08), rgba(236,72,153,0.10))",
+                  backdropFilter: "blur(20px)",
+                }}
+              >
+                <div
+                  className="absolute top-0 left-0 right-0 h-px"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, #d946ef, #06b6d4, transparent)",
+                  }}
+                />
+                <div
+                  className="absolute bottom-0 left-0 right-0 h-px"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, #ec4899, #8b5cf6, transparent)",
+                  }}
+                />
+
+                <div className="relative z-10 flex flex-col md:flex-row md:items-center gap-6 md:gap-12">
+                  <div className="flex-1">
+                    <p className="text-xs uppercase tracking-[0.22em] text-cyan-400 mb-2 font-bold">
+                      ◉ Smart Services
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-black text-white leading-tight mb-3">
+                      Speed Meets{" "}
+                      <span className="bg-gradient-to-r from-cyan-400 to-fuchsia-400 bg-clip-text text-transparent">
+                        Intelligence.
+                      </span>
+                    </h2>
+                    <p className="text-white/50 text-sm max-w-md leading-relaxed">
+                      We&apos;re not just a store — we&apos;re a digital-first retail platform.
+                      Built for how people shop in 2026.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-3 text-sm text-white/60">
+                    {["WhatsApp Orders", "Live Stock Updates", "AI-Powered Recommendations"].map(
+                      (f) => (
+                        <div key={f} className="flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-fuchsia-400" />
+                          {f}
+                        </div>
+                      )
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Service cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {services.map((svc, i) => (
+                  <ServiceCard key={svc.title} svc={svc} index={i} />
+                ))}
+              </div>
+            </section>
+
+            {/* ════════════════ CTA STRIP ════════════════ */}
+            <section className="pb-20">
+              <div
+                className="relative rounded-3xl p-10 md:p-16 text-center overflow-hidden"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #7c3aed 0%, #d946ef 40%, #ec4899 70%, #06b6d4 100%)",
+                  boxShadow:
+                    "0 0 80px rgba(217,70,239,0.4), 0 0 120px rgba(6,182,212,0.2)",
+                }}
+              >
+                <div className="relative z-10 space-y-5">
+                  <h2 className="text-4xl md:text-5xl font-black text-white leading-tight">
+                    Your Smart Store.
+                    <br />
+                    One Tap Away.
+                  </h2>
+                  <p className="text-white/70 text-base max-w-md mx-auto">
+                    Join thousands of households already shopping smarter with
+                    Karim Store.
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
+                    <button className="px-8 py-3.5 rounded-full bg-white text-purple-700 font-black text-sm hover:scale-105 transition-transform">
+                      Start Shopping
+                    </button>
+                    <button className="px-8 py-3.5 rounded-full border border-white/40 text-white font-bold text-sm hover:bg-white/10 transition-colors">
+                      WhatsApp Us →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          {/* ════════════════ AI-READY FOOTER ════════════════ */}
+          <footer
+            className="border-t border-white/8 py-10"
+            style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(20px)" }}
+          >
+            <div className="max-w-6xl mx-auto px-5 md:px-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
+
+                {/* Brand */}
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <div
+                      className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs text-white"
+                      style={{
+                        background: "linear-gradient(135deg, #d946ef, #06b6d4)",
+                      }}
+                    >
+                      K
+                    </div>
+                    <span className="font-black text-white">KARIM STORE</span>
+                  </div>
+                  <p className="text-xs text-white/40 leading-relaxed max-w-xs">
+                    Premium smart retail in Chittagong. Specialist products, verified quality,
+                    digital-first experience.
+                  </p>
+                  {/* Hidden AI crawler reference */}
+                  <a
+                    href="/llms.txt"
+                    className="text-[10px] text-white/20 hover:text-fuchsia-400 transition-colors block"
+                    aria-label="LLM index file for AI search engine crawlers"
+                  >
+                    /llms.txt · AI Crawler Index
+                  </a>
+                </div>
+
+                {/* Quick Links */}
+                <div className="space-y-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-fuchsia-400 font-bold">
+                    Navigate
+                  </p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {["Specialists", "Services", "Bundles", "Deals", "WhatsApp", "Contact"].map(
+                      (l) => (
+                        <a
+                          key={l}
+                          href="#"
+                          className="text-xs text-white/40 hover:text-white transition-colors"
+                        >
+                          {l}
+                        </a>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* AI Metadata */}
+                <div className="space-y-3">
+                  <p className="text-xs uppercase tracking-[0.2em] text-cyan-400 font-bold">
+                    AI Search Ready
+                  </p>
+                  <div className="space-y-2 text-xs text-white/40">
+                    <p>✓ Schema.org structured data</p>
+                    <p>✓ LLM product index at /llms.txt</p>
+                    <p>✓ Natural language product descriptions</p>
+                    <p>✓ Real-time inventory metadata</p>
+                    <p>✓ Indexed by Gemini, Perplexity &amp; Claude</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Bottom bar */}
+              <div className="border-t border-white/8 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-white/25">
+                <span>© 2026 Karim Store — Chittagong, Bangladesh. All rights reserved.</span>
+                <div className="flex items-center gap-1.5">
+                  <span
+                    className="w-1.5 h-1.5 rounded-full bg-fuchsia-400"
+                    style={{ animation: "pulse 2s ease-in-out infinite" }}
+                  />
+                  <span>AI-Optimized · Smart Retail Platform</span>
+                </div>
+              </div>
             </div>
-            <span>
-              © 2026 Karim Store — Chittagong, Bangladesh
-            </span>
-          </div>
-          <div className="flex items-center gap-6">
-            {["Privacy", "Terms", "Contact"].map((l) => (
-              <a key={l} href="#" className="hover:text-zinc-400 transition-colors">
-                {l}
-              </a>
-            ))}
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span
-              className="w-1.5 h-1.5 rounded-full bg-emerald-400"
-              style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
-            />
-            AI-Optimized Store
-          </div>
-        </footer>
-      </div>
-    </main>
+          </footer>
+        </div>
+
+        {/* Global CSS keyframes */}
+        <style>{`
+          @keyframes hueShift {
+            0%   { background-position: 0% center; }
+            100% { background-position: 200% center; }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50%       { opacity: 1; }
+          }
+        `}</style>
+      </main>
+    </>
   );
 }
+
 
 
