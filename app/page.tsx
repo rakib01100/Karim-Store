@@ -232,7 +232,7 @@ function HeroBanner() {
   useEffect(() => {
     const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
     return () => clearInterval(id);
-  };
+  }
 
   return (
     <div
