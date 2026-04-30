@@ -257,7 +257,6 @@ function HeroBanner() {
           background:
             "linear-gradient(135deg, rgba(6,3,15,0.7) 0%, rgba(217,70,239,0.2) 100%)",
         }}
-      />
 
       {/* Text overlay */}
       <div className="relative z-10 text-center px-8 py-16 space-y-4 flex flex-col items-center justify-center" style={{ minHeight: "340px" }}>
