@@ -231,7 +231,8 @@ function HeroBanner() {
       className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12 flex items-center justify-center"
       style={{
         minHeight: "340px",
-        background: "linear-gradient(135deg, rgba(217,70,239,0.15) 0%, rgba(6,182,212,0.10) 50%, rgba(236,72,153,0.12) 100%)",
+        background:
+          "linear-gradient(135deg, rgba(217,70,239,0.15) 0%, rgba(6,182,212,0.10) 50%, rgba(236,72,153,0.12) 100%)",
         backdropFilter: "blur(20px)",
       }}
     >
@@ -245,71 +246,6 @@ function HeroBanner() {
         <p className="text-white/50 text-sm max-w-md mx-auto leading-relaxed">
           Specialist-grade groceries, verified quality, 60-minute delivery.
         </p>
-    </div>
-  );
-}
-      
-        {/* Dot indicators */}
-        <div className="flex gap-2 pt-2">
-          {images.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setSlide(i)}
-              className="w-2 h-2 rounded-full transition-all"
-              style={{
-                background: i === slide ? "#d946ef" : "rgba(255,255,255,0.3)",
-                transform: i === slide ? "scale(1.4)" : "scale(1)",
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-    >
-      {/* Top shimmer line */}
-      <div
-        className="absolute top-0 left-0 right-0 h-px"
-        style={{
-          background: "linear-gradient(90deg, transparent, #d946ef, #06b6d4, transparent)",
-        }}
-      />
-
-      {/* Decorative floating circles */}
-      <div
-        className="absolute top-8 right-12 w-28 h-28 rounded-full border border-fuchsia-500/20"
-        style={{ background: "rgba(217,70,239,0.06)" }}
-      />
-      <div
-        className="absolute bottom-8 left-16 w-20 h-20 rounded-full border border-cyan-500/20"
-        style={{ background: "rgba(6,182,212,0.06)" }}
-      />
-      <div
-        className="absolute top-1/2 left-8 w-10 h-10 rounded-full border border-pink-500/20"
-        style={{ background: "rgba(236,72,153,0.08)" }}
-      />
-
-      <div className="relative z-10 text-center px-8 py-12 space-y-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-400/80 font-bold">
-          ✦ Karim Store — Chittagong
-        </p>
-        <h2
-          className="text-4xl md:text-6xl font-black"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, #d946ef 0%, #ec4899 35%, #06b6d4 70%, #d946ef 100%)",
-            backgroundSize: "200% auto",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "hueShift 5s linear infinite",
-          }}
-        >
-          Smart. Fresh. Premium.
-        </h2>
-        <p className="text-white/50 text-sm max-w-md mx-auto leading-relaxed">
-          Specialist-grade groceries, verified quality, and 60-minute delivery — all in one place.
-        </p>
         <div className="flex justify-center gap-4 pt-2">
           <button
             className="text-sm font-bold px-6 py-2.5 rounded-full text-white"
@@ -320,19 +256,8 @@ function HeroBanner() {
           >
             Shop Now
           </button>
-          <button className="text-sm font-semibold px-6 py-2.5 rounded-full border border-white/15 text-white/70 hover:text-white hover:border-fuchsia-500/40 transition-all">
-            View All →
-          </button>
         </div>
       </div>
-
-      {/* Bottom shimmer line */}
-      <div
-        className="absolute bottom-0 left-0 right-0 h-px"
-        style={{
-          background: "linear-gradient(90deg, transparent, #ec4899, #8b5cf6, transparent)",
-        }}
-      />
     </div>
   );
 }
