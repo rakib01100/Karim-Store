@@ -248,42 +248,7 @@ function HeroBanner() {
     </div>
   );
 }
-
-      {/* Overlay */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(6,3,15,0.7) 0%, rgba(217,70,239,0.2) 100%)",
-        }}
-
-      {/* Text overlay */}
-      <div className="relative z-10 text-center px-8 py-16 space-y-4 flex flex-col items-center justify-center" style={{ minHeight: "340px" }}>
-        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-400/80 font-bold">
-          ✦ Karim Store — Chittagong
-        </p>
-        <h2
-          className="text-4xl md:text-6xl font-black"
-          style={{
-            backgroundImage:
-              "linear-gradient(90deg, #d946ef 0%, #ec4899 35%, #06b6d4 70%, #d946ef 100%)",
-            backgroundSize: "200% auto",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            animation: "hueShift 5s linear infinite",
-          }}
-        >
-          Smart. Fresh. Premium.
-        </h2>
-        <div className="flex justify-center gap-4 pt-2">
-          <button
-            className="text-sm font-bold px-6 py-2.5 rounded-full text-white"
-            style={{ background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)" }}
-          >
-            Shop Now
-          </button>
-        </div>
-
+      
         {/* Dot indicators */}
         <div className="flex gap-2 pt-2">
           {images.map((_, i) => (
