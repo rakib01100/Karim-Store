@@ -232,8 +232,7 @@ function HeroBanner() {
   useEffect(() => {
     const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
     return () => clearInterval(id);
-  }
-
+  }, [images.length]);
   return (
     <div
       className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12"
