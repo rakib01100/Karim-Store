@@ -225,17 +225,93 @@ function GlassBadge({
 // FIX: Removed ImageSlider entirely — it referenced /image1.webp etc. which
 // don't exist in the repo, causing a hard Next.js build crash.
 // Replace with a stylised hero visual that needs no external assets.
+import Image from "next/image";
+
 function HeroBanner() {
+  const [slide, setSlide] = useState(0);
+  const images = ["/image1.webp", "/image2.webp", "/image3.webp"];
+
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <div
-      className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12 flex items-center justify-center"
-      style={{
-        minHeight: "340px",
-        background:
-          "linear-gradient(135deg, rgba(217,70,239,0.15) 0%, rgba(6,182,212,0.10) 50%, rgba(236,72,153,0.12) 100%)",
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 0 80px rgba(217,70,239,0.12), inset 0 1px 0 rgba(255,255,255,0.07)",
-      }}
+      className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12"
+      style={{ minHeight: "340px" }}
+    >
+      {/* Images */}
+      {images.map((src, i) => (
+        <div
+          key={src}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === slide ? 1 : 0 }}
+        >
+          <Image
+            src={src}
+            alt={Karim Store banner ${i + 1}}
+            fill
+            style={{ objectFit: "cover" }}
+            priority={i === 0}
+          />
+        </div>
+      ))}
+
+      {/* Overlay */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(135deg, rgba(6,3,15,0.7) 0%, rgba(217,70,239,0.2) 100%)",
+        }}
+      />
+
+      {/* Text overlay */}
+      <div className="relative z-10 text-center px-8 py-16 space-y-4 flex flex-col items-center justify-center" style={{ minHeight: "340px" }}>
+        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-400/80 font-bold">
+          ✦ Karim Store — Chittagong
+        </p>
+        <h2
+          className="text-4xl md:text-6xl font-black"
+          style={{
+            backgroundImage:
+              "linear-gradient(90deg, #d946ef 0%, #ec4899 35%, #06b6d4 70%, #d946ef 100%)",
+            backgroundSize: "200% auto",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            animation: "hueShift 5s linear infinite",
+          }}
+        >
+          Smart. Fresh. Premium.
+        </h2>
+        <div className="flex justify-center gap-4 pt-2">
+          <button
+            className="text-sm font-bold px-6 py-2.5 rounded-full text-white"
+            style={{ background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)" }}
+          >
+            Shop Now
+          </button>
+        </div>
+
+        {/* Dot indicators */}
+        <div className="flex gap-2 pt-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setSlide(i)}
+              className="w-2 h-2 rounded-full transition-all"
+              style={{
+                background: i === slide ? "#d946ef" : "rgba(255,255,255,0.3)",
+                transform: i === slide ? "scale(1.4)" : "scale(1)",
+              }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
     >
       {/* Top shimmer line */}
       <div
@@ -494,6 +570,17 @@ export default function KarimStorePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURE_DATA) }}
       />
+      {/* Global CSS keyframes */}
+       <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes hueShift {
+            0%   { background-position: 0% center; }
+            100% { background-position: 200% center; }
+          }
+          @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50%       { opacity: 1; }
+          }
+        `}} />
 
       <main
         className="relative min-h-screen overflow-x-hidden text-white"
@@ -816,18 +903,6 @@ export default function KarimStorePage() {
             </div>
           </footer>
         </div>
-
-        {/* Global CSS keyframes */}
-       <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes hueShift {
-            0%   { background-position: 0% center; }
-            100% { background-position: 200% center; }
-          }
-          @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50%       { opacity: 1; }
-          }
-        `}} />
       </main>
     </>
   );
