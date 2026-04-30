@@ -245,7 +245,6 @@ function HeroBanner() {
         <p className="text-white/50 text-sm max-w-md mx-auto leading-relaxed">
           Specialist-grade groceries, verified quality, 60-minute delivery.
         </p>
-      </div>
     </div>
   );
 }
