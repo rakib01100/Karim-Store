@@ -226,34 +226,29 @@ function GlassBadge({
 // don't exist in the repo, causing a hard Next.js build crash.
 // Replace with a stylised hero visual that needs no external assets.
 function HeroBanner() {
-  const [slide, setSlide] = useState(0);
-  const images = ["/image1.webp", "/image2.webp", "/image3.webp"];
-
-  useEffect(() => {
-    const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
-    return () => clearInterval(id);
-  }, [images.length]);
   return (
     <div
-      className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12"
-      style={{ minHeight: "340px" }}
+      className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12 flex items-center justify-center"
+      style={{
+        minHeight: "340px",
+        background: "linear-gradient(135deg, rgba(217,70,239,0.15) 0%, rgba(6,182,212,0.10) 50%, rgba(236,72,153,0.12) 100%)",
+        backdropFilter: "blur(20px)",
+      }}
     >
-      {/* Images */}
-      {images.map((src, i) => (
-        <div
-          key={src}
-          className="absolute inset-0 transition-opacity duration-700"
-          style={{ opacity: i === slide ? 1 : 0 }}
-        >
-          <Image
-            src={src}
-            alt={Karim Store banner ${i + 1}}
-            fill
-            style={{ objectFit: "cover" }}
-            priority={i === 0}
-          />
-        </div>
-      ))}
+      <div className="relative z-10 text-center px-8 py-12 space-y-4">
+        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-400/80 font-bold">
+          ✦ Karim Store — Chittagong
+        </p>
+        <h2 className="text-4xl md:text-6xl font-black text-white">
+          Smart. Fresh. Premium.
+        </h2>
+        <p className="text-white/50 text-sm max-w-md mx-auto leading-relaxed">
+          Specialist-grade groceries, verified quality, 60-minute delivery.
+        </p>
+      </div>
+    </div>
+  );
+}
 
       {/* Overlay */}
       <div
