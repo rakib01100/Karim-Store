@@ -277,9 +277,6 @@ function HeroBanner() {
         >
           Smart. Fresh. Premium.
         </h2>
-        >
-          Smart. Fresh. Premium.
-        </h2>
         <div className="flex justify-center gap-4 pt-2">
           <button
             className="text-sm font-bold px-6 py-2.5 rounded-full text-white"
