@@ -818,16 +818,16 @@ export default function KarimStorePage() {
         </div>
 
         {/* Global CSS keyframes */}
-        <style>{`
-          @keyframes hueShift {
-            0%   { background-position: 0% center; }
-            100% { background-position: 200% center; }
-          }
-          @keyframes pulse {
-            0%, 100% { opacity: 0.5; }
-            50%       { opacity: 1; }
-          }
-        `}</style>
+       <style dangerouslySetInnerHTML={{ __html: `
+  @keyframes hueShift {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+  }
+`}} />
       </main>
     </>
   );
