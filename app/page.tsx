@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-
+import Image from "next/image";
 // ─── Structured Data for AI/SEO bots ────────────────────────────────────────
 const STRUCTURE_DATA = {
   "@context": "https://schema.org",
@@ -225,8 +225,6 @@ function GlassBadge({
 // FIX: Removed ImageSlider entirely — it referenced /image1.webp etc. which
 // don't exist in the repo, causing a hard Next.js build crash.
 // Replace with a stylised hero visual that needs no external assets.
-import Image from "next/image";
-
 function HeroBanner() {
   const [slide, setSlide] = useState(0);
   const images = ["/image1.webp", "/image2.webp", "/image3.webp"];
