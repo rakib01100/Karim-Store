@@ -104,8 +104,8 @@ function HeroBanner() {
       <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(6,3,15,0.6) 0%, rgba(217,70,239,0.25) 100%)" }} />
       <div className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-16 space-y-4" style={{ minHeight: "420px" }}>
         <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-300 font-bold">✦ Karim Store — Chittagong</p>
-        <h2 className="text-4xl md:text-6xl font-black text-white drop-shadow-lg">Smart. Fresh. Premium.</h2>
-        <p className="text-white/70 text-sm max-w-md mx-auto leading-relaxed">Specialist-grade groceries, verified quality, 60-minute delivery.</p>
+        <h2 className="text-4xl md:text-6xl font-black text-white drop-shadow-lg">KARIM STORE</h2>
+        <p className="text-white/70 text-sm max-w-md mx-auto leading-relaxed">Specialist-grade groceries, we believe in quality.</p>
         <button className="text-sm font-bold px-6 py-2.5 rounded-full text-white" style={{ background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)", boxShadow: "0 0 20px rgba(217,70,239,0.5)" }}>
           Shop Now
         </button>
