@@ -85,7 +85,7 @@ function GlassBadge({ text, color }: { text: string; color: "fuchsia" | "cyan" |
 
 function HeroBanner() {
   const [slide, setSlide] = useState(0);
-  const images = ["/image1.webp", "/image2.webp", "/image3.webp"];
+  const images = ["/IMAGE001.webp", "/IMAGE002.webp", "/image1.webp", "/image2.webp", "/image3.webp"];
 
   useEffect(() => {
     const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
