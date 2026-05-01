@@ -89,8 +89,10 @@ function HeroBanner() {
       className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12 flex items-center justify-center"
       style={{
         minHeight: "340px",
-        background: "linear-gradient(135deg, rgba(217,70,239,0.15) 0%, rgba(6,182,212,0.10) 50%, rgba(236,72,153,0.12) 100%)",
+        background: "linear-gradient(135deg, rgba(217,70,239,0.35) 0%, rgba(6,182,212,0.25) 50%, rgba(236,72,153,0.30) 100%)",
         backdropFilter: "blur(20px)",
+        boxShadow: "0 0 60px rgba(217,70,239,0.2), inset 0 1px 0 rgba(255,255,255,0.1)",
+        border: "1px solid rgba(217,70,239,0.3)",
       }}
     >
       <div className="relative z-10 text-center px-8 py-12 space-y-4">
