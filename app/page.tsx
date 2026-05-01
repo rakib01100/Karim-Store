@@ -84,34 +84,35 @@ function GlassBadge({ text, color }: { text: string; color: "fuchsia" | "cyan" |
 }
 
 function HeroBanner() {
+  const [slide, setSlide] = useState(0);
+  const images = ["/image1.webp", "/image2.webp", "/image3.webp"];
+
+  useEffect(() => {
+    const id = setInterval(() => setSlide((s) => (s + 1) % images.length), 3500);
+    return () => clearInterval(id);
+  }, [images.length]);
+
   return (
-    <div
-      className="relative w-full rounded-3xl border border-white/10 overflow-hidden mb-12 flex items-center justify-center"
-      style={{
-        minHeight: "340px",
-        background: "linear-gradient(135deg, rgba(217,70,239,0.35) 0%, rgba(6,182,212,0.25) 50%, rgba(236,72,153,0.30) 100%)",
-        backdropFilter: "blur(20px)",
-        boxShadow: "0 0 60px rgba(217,70,239,0.2), inset 0 1px 0 rgba(255,255,255,0.1)",
-        border: "1px solid rgba(217,70,239,0.3)",
-      }}
-    >
-      <div className="relative z-10 text-center px-8 py-12 space-y-4">
-        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-400/80 font-bold">
-          ✦ Karim Store — Chittagong
-        </p>
-        <h2 className="text-4xl md:text-6xl font-black text-white">
-          Smart. Fresh. Premium.
-        </h2>
-        <p className="text-white/50 text-sm max-w-md mx-auto leading-relaxed">
-          Specialist-grade groceries, verified quality, 60-minute delivery.
-        </p>
-        <div className="flex justify-center gap-4 pt-2">
-          <button
-            className="text-sm font-bold px-6 py-2.5 rounded-full text-white"
-            style={{ background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)", boxShadow: "0 0 20px rgba(217,70,239,0.4)" }}
-          >
-            Shop Now
-          </button>
+    <div className="relative w-full rounded-3xl overflow-hidden mb-12" style={{ minHeight: "420px" }}>
+      {images.map((img, i) => (
+        <div
+          key={i}
+          className="absolute inset-0 transition-opacity duration-1000"
+          style={{ opacity: i === slide ? 1 : 0, backgroundImage: `url(${img})`, backgroundSize: "cover", backgroundPosition: "center" }}
+        />
+      ))}
+      <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(6,3,15,0.6) 0%, rgba(217,70,239,0.25) 100%)" }} />
+      <div className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-16 space-y-4" style={{ minHeight: "420px" }}>
+        <p className="text-xs uppercase tracking-[0.3em] text-fuchsia-300 font-bold">✦ Karim Store — Chittagong</p>
+        <h2 className="text-4xl md:text-6xl font-black text-white drop-shadow-lg">Smart. Fresh. Premium.</h2>
+        <p className="text-white/70 text-sm max-w-md mx-auto leading-relaxed">Specialist-grade groceries, verified quality, 60-minute delivery.</p>
+        <button className="text-sm font-bold px-6 py-2.5 rounded-full text-white" style={{ background: "linear-gradient(135deg, #d946ef, #ec4899, #06b6d4)", boxShadow: "0 0 20px rgba(217,70,239,0.5)" }}>
+          Shop Now
+        </button>
+        <div className="flex gap-2 pt-2">
+          {images.map((_, i) => (
+            <button key={i} onClick={() => setSlide(i)} className="rounded-full transition-all" style={{ width: i === slide ? "24px" : "8px", height: "8px", background: i === slide ? "#d946ef" : "rgba(255,255,255,0.3)" }} />
+          ))}
         </div>
       </div>
     </div>
