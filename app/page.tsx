@@ -24,8 +24,8 @@ const STRUCTURE_DATA = {
 };
 
 const specialists = [
-  { id: "yogurt", name: "Fresh Yogurt | তাজা দই", category: "Dairy & Chilled", badge: "Daily Fresh", price: "৳ 60 / cup", icon: "◎", image: "/products/yogurt.webp", gradient: "from-fuchsia-600 via-pink-500 to-rose-400", glow: "rgba(217,70,239,0.5)", tags: ["Fresh", "Creamy", "Daily Made"] },
-  { id: "sour-yogurt", name: "Sour Yogurt | টক দই", category: "Dairy & Chilled", badge: "Artisan", price: "৳ 80 / cup", icon: "⬡", image: "/products/sour-yogurt.webp", gradient: "from-cyan-500 via-sky-400 to-blue-500", glow: "rgba(6,182,212,0.5)", tags: ["Tangy", "Probiotic", "Hand-set"] },
+  { id: "yogurt", name: "Fresh Yogurt | তাজা দই", category: "Dairy & Chilled", badge: "Daily Fresh", price: "৳ 60 / cup", icon: "◎", image: "/products/doi.webp", gradient: "from-fuchsia-600 via-pink-500 to-rose-400", glow: "rgba(217,70,239,0.5)", tags: ["Fresh", "Creamy", "Daily Made"] },
+  { id: "sour-yogurt", name: "Sour Yogurt | টক দই", category: "Dairy & Chilled", badge: "Artisan", price: "৳ 80 / cup", icon: "⬡", image: "/products/tokhdoi.webp", gradient: "from-cyan-500 via-sky-400 to-blue-500", glow: "rgba(6,182,212,0.5)", tags: ["Tangy", "Probiotic", "Hand-set"] },
   { id: "firni", name: "Firni / Khir | ফিরনি / ক্ষীর", category: "Traditional Sweets", badge: "Heritage", price: "৳ 120 / bowl", icon: "✦", image: "/products/firni.webp", gradient: "from-violet-600 via-purple-500 to-fuchsia-500", glow: "rgba(139,92,246,0.5)", tags: ["Traditional", "Rice-based", "Festive"] },
   { id: "cake", name: "Fresh Cake | তাজা কেক", category: "Bakery", badge: "Bestseller", price: "৳ 350 / piece", icon: "◈", image: "/products/cake.webp", gradient: "from-pink-600 via-fuchsia-500 to-violet-500", glow: "rgba(236,72,153,0.5)", tags: ["Soft", "Custom", "Daily Baked"] },
   { id: "icecream", name: "Ice Cream | আইসক্রিম", category: "Frozen Desserts", badge: "Fan Favourite", price: "৳ 50 / scoop", icon: "◉", image: "/products/icecream.webp", gradient: "from-cyan-400 via-teal-400 to-emerald-400", glow: "rgba(20,184,166,0.5)", tags: ["Chilled", "Creamy", "Multi-flavour"] },
@@ -141,6 +141,17 @@ function SpecialistCard({ product, index }: { product: (typeof specialists)[0]; 
           minHeight: "240px",
         }}
       >
+        {/* Product image */}
+        <div
+          className="w-full h-36 rounded-xl mb-4 overflow-hidden"
+          style={{ background: "rgba(255,255,255,0.05)" }}
+        >
+          <img
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity"
+          />
+        </div>
         <div className="absolute -top-10 -right-10 w-32 h-32 rounded-full blur-3xl pointer-events-none" style={{ background: product.glow, opacity: hovered ? 0.35 : 0, transition: "opacity 0.5s ease" }} />
         <div className="flex items-start justify-between mb-4">
           <span className={`text-4xl bg-gradient-to-br ${product.gradient} bg-clip-text text-transparent font-black leading-none`} style={{ filter: hovered ? `drop-shadow(0 0 12px ${product.glow})` : "none", transition: "filter 0.4s" }}>
