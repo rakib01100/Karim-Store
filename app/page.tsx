@@ -164,7 +164,7 @@ function SpecialistCard({ product, index }: { product: (typeof specialists)[0]; 
         <div className="flex-1">
           <p className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">{product.category}</p>
           <h3 className={`bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent mb-3`}>
-  <span className="block text-lg font-black leading-tight">{product.name.split("|")[0]}</span>
+ <span className="block text-lg font-black leading-tight">{product.name.split("|")[0]}</span>
  <span
   className="block text-sm font-semibold opacity-80"
   style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
