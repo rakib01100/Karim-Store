@@ -12,24 +12,24 @@ const STRUCTURE_DATA = {
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Specialist Products",
-    itemListElement: [
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Premium Grade Rice" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Cold-Press Mustard Oil" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Artisan Spice Blends" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Organic Lentils" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fresh Seafood Selection" } },
-      { "@type": "Offer", itemOffered: { "@type": "Product", name: "Smart Pantry Bundles" } },
-    ],
+   itemListElement: [
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fresh Yogurt" } },
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Sour Yogurt" } },
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Firni / Khir" } },
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fresh Cake" } },
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Ice Cream" } },
+  { "@type": "Offer", itemOffered: { "@type": "Product", name: "Fresh Milk" } },
+],
   },
 };
 
 const specialists = [
-  { id: "rice", name: "Premium Grade Rice", category: "Grains & Staples", badge: "Top Pick", price: "৳ 180 / kg", icon: "⬡", gradient: "from-fuchsia-600 via-pink-500 to-rose-400", glow: "rgba(217,70,239,0.5)", tags: ["Aged", "Aromatic", "Specialist"] },
-  { id: "oil", name: "Cold-Press Mustard Oil", category: "Oils & Condiments", badge: "Artisan", price: "৳ 320 / L", icon: "◎", gradient: "from-cyan-500 via-sky-400 to-blue-500", glow: "rgba(6,182,212,0.5)", tags: ["Cold-Pressed", "Pure", "Lab-Verified"] },
-  { id: "spice", name: "Artisan Spice Blends", category: "Spices & Herbs", badge: "Exclusive", price: "৳ 95 / pack", icon: "✦", gradient: "from-violet-600 via-purple-500 to-fuchsia-500", glow: "rgba(139,92,246,0.5)", tags: ["Hand-ground", "Small Batch", "No Additives"] },
-  { id: "lentils", name: "Organic Lentils", category: "Pulses & Legumes", badge: "Certified", price: "৳ 140 / kg", icon: "◈", gradient: "from-pink-600 via-fuchsia-500 to-violet-500", glow: "rgba(236,72,153,0.5)", tags: ["Organic", "Stone-sorted", "High Protein"] },
-  { id: "seafood", name: "Fresh Seafood Selection", category: "Marine & Fish", badge: "Daily Fresh", price: "Market Price", icon: "◉", gradient: "from-cyan-400 via-teal-400 to-emerald-400", glow: "rgba(20,184,166,0.5)", tags: ["Daily Sourced", "Chilled", "Traceable"] },
-  { id: "bundles", name: "Smart Pantry Bundles", category: "Curated Sets", badge: "Best Value", price: "From ৳ 999", icon: "⬟", gradient: "from-fuchsia-500 via-pink-400 to-cyan-400", glow: "rgba(217,70,239,0.4)", tags: ["AI-Curated", "Monthly", "Save 20%"] },
+  { id: "yogurt", name: "Fresh Yogurt | তাজা দই", category: "Dairy & Chilled", badge: "Daily Fresh", price: "৳ 60 / cup", icon: "◎", image: "/products/yogurt.webp", gradient: "from-fuchsia-600 via-pink-500 to-rose-400", glow: "rgba(217,70,239,0.5)", tags: ["Fresh", "Creamy", "Daily Made"] },
+  { id: "sour-yogurt", name: "Sour Yogurt | টক দই", category: "Dairy & Chilled", badge: "Artisan", price: "৳ 80 / cup", icon: "⬡", image: "/products/sour-yogurt.webp", gradient: "from-cyan-500 via-sky-400 to-blue-500", glow: "rgba(6,182,212,0.5)", tags: ["Tangy", "Probiotic", "Hand-set"] },
+  { id: "firni", name: "Firni / Khir | ফিরনি / ক্ষীর", category: "Traditional Sweets", badge: "Heritage", price: "৳ 120 / bowl", icon: "✦", image: "/products/firni.webp", gradient: "from-violet-600 via-purple-500 to-fuchsia-500", glow: "rgba(139,92,246,0.5)", tags: ["Traditional", "Rice-based", "Festive"] },
+  { id: "cake", name: "Fresh Cake | তাজা কেক", category: "Bakery", badge: "Bestseller", price: "৳ 350 / piece", icon: "◈", image: "/products/cake.webp", gradient: "from-pink-600 via-fuchsia-500 to-violet-500", glow: "rgba(236,72,153,0.5)", tags: ["Soft", "Custom", "Daily Baked"] },
+  { id: "icecream", name: "Ice Cream | আইসক্রিম", category: "Frozen Desserts", badge: "Fan Favourite", price: "৳ 50 / scoop", icon: "◉", image: "/products/icecream.webp", gradient: "from-cyan-400 via-teal-400 to-emerald-400", glow: "rgba(20,184,166,0.5)", tags: ["Chilled", "Creamy", "Multi-flavour"] },
+  { id: "milk", name: "Fresh Milk | তাজা দুধ", category: "Dairy & Essentials", badge: "Daily Fresh", price: "৳ 90 / L", icon: "⬟", image: "/products/milk.webp", gradient: "from-fuchsia-500 via-pink-400 to-cyan-400", glow: "rgba(217,70,239,0.4)", tags: ["Pure", "Farm Fresh", "Daily Delivery"] },
 ];
 
 const services = [
