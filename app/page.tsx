@@ -42,8 +42,8 @@ const services = [
 const TICKER_PHRASES = [
   "Premium Selection — Smart Shopping",
   "Fresh. Fast. Digital-First.",
-  "Indexed for AI Search Engines",
-  "60-Min Delivery in Chittagong",
+  "We belive in quality",
+  "KARIM STORE",
 ] as const;
 
 function useScrollReveal() {
@@ -165,7 +165,12 @@ function SpecialistCard({ product, index }: { product: (typeof specialists)[0]; 
           <p className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">{product.category}</p>
           <h3 className={`bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent mb-3`}>
   <span className="block text-lg font-black leading-tight">{product.name.split("|")[0]}</span>
-  <span className="block text-sm font-semibold opacity-80">{product.name.split("|")[1]}</span>
+ <span
+  className="block text-sm font-semibold opacity-80"
+  style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
+>
+  {product.name.split("|")[1]}
+</span>
 </h3>
         </div>
         <div className="flex flex-wrap gap-1.5 mb-4">
