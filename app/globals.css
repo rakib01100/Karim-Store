@@ -1,8 +1,8 @@
+@import url('https://fonts.maateen.me/solaiman-lipi/font.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url('https://fonts.maateen.me/solaiman-lipi/font.css');
 
 :root {
   --foreground-rgb: 255, 255, 255;
