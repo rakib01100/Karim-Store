@@ -2,13 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.maateen.me/solaiman-lipi/font.css');
+
 :root {
   --foreground-rgb: 255, 255, 255;
   --background-start-rgb: 2, 6, 23;
   --background-end-rgb: 0, 0, 0;
 }
+
 body {
-  font-family: 'Hind Siliguri', sans-serif;
+  font-family: 'SolaimanLipi', 'Hind Siliguri', Arial, sans-serif;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
