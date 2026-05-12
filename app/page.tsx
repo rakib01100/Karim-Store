@@ -161,19 +161,34 @@ function SpecialistCard({ product, index }: { product: (typeof specialists)[0]; 
             {product.badge}
           </span>
         </div>
-         <div className="flex-1">
+        <div className="flex-1">
           <p className="text-[11px] uppercase tracking-widest text-white/40 mb-1.5">{product.category}</p>
-          <h3 className={bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent mb-3}>
-  <span className="block text-lg font-black leading-tight">{[product.name](http://product.name).split("|")[0]}</span>
+          <h3 className={`bg-gradient-to-r ${product.gradient} bg-clip-text text-transparent mb-3`}>
+  <span className="block text-lg font-black leading-tight">{product.name.split("|")[0]}</span>
  <span
   className="block text-sm font-semibold opacity-80"
   style={{ fontFamily: "'Hind Siliguri', sans-serif" }}
 >
-  {[product.name](http://product.name).split("|")[1]}
+  {product.name.split("|")[1]}
 </span>
 </h3>
-        </div> )
-                  
+        </div>
+        <div className="flex flex-wrap gap-1.5 mb-4">
+          {product.tags.map((tag) => (
+            <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full border border-white/10 text-white/50 bg-white/5">{tag}</span>
+          ))}
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-white font-bold text-base">{product.price}</span>
+          <button className={`text-xs font-bold px-4 py-1.5 rounded-full bg-gradient-to-r ${product.gradient} text-white`} style={{ boxShadow: hovered ? `0 0 20px ${product.glow}` : "none", transition: "box-shadow 0.4s" }}>
+            Add →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ServiceCard({ svc, index }: { svc: (typeof services)[0]; index: number }) {
   const { ref, visible } = useScrollReveal();
   const accentMap: Record<string, string> = { fuchsia: "from-fuchsia-600 to-pink-500", cyan: "from-cyan-500 to-teal-400", pink: "from-pink-600 to-fuchsia-500", violet: "from-violet-600 to-purple-500" };
@@ -357,5 +372,3 @@ export default function KarimStorePage() {
     </>
   );
 }
-
-
